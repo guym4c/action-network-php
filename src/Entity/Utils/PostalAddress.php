@@ -27,11 +27,17 @@ class PostalAddress extends AbstractModel {
     /** @var string */
     public $language;
 
-    /** @var  */
+    /** @var Location */
     public $location;
 
     public function __construct(array $json) {
         $this->hydrate($json);
+    }
+
+    public function jsonSerialize(): array {
+        return $this->serialize([
+            'location' => $this->location->jsonSerialize(),
+        ]);
     }
 
 }

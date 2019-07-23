@@ -7,7 +7,6 @@ use Exception;
 use Guym4c\ActionNetwork\ActionNetworkApiException;
 use Guym4c\ActionNetwork\Client;
 use Guym4c\ActionNetwork\Entity\Utils\EmailAddress;
-use Guym4c\ActionNetwork\Entity\Utils\Identifier;
 use Guym4c\ActionNetwork\Entity\Utils\PostalAddress;
 use Guym4c\ActionNetwork\HalCollection;
 
@@ -15,7 +14,7 @@ class Person extends AbstractHalEntity {
 
     public static $linkName = 'osdi:people';
 
-    /** @var Identifier[] */
+    /** @var array */
     public $identifiers;
 
     /** @var DateTime */
@@ -50,11 +49,19 @@ class Person extends AbstractHalEntity {
 
         $this->created = new DateTime($json['created_date']);
         $this->modified = new DateTime($json['modified_date']);
-        $this->populateArrayType(Identifier::class, 'identifiers', $json);
         $this->populateArrayType(EmailAddress::class, 'emailAddresses', $json);
         $this->populateArrayType(PostalAddress::class, 'postalAddresses', $json);
 
         $this->hydrate($json);
+    }
+
+    public function jsonSerialize(): array {
+        return $this->serialize([
+            'created_date' => $this->created->format(DATE_ATOM),
+            'modified_date' => $this->modified->format(DATE_ATOM),
+            'email_addresses' => self::serializeArray($this->emailAddresses),
+            'postal_addresses' => self::serializeArray($this->postalAddresses),
+        ]);
     }
 
     /**

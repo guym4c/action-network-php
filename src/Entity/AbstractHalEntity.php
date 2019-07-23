@@ -24,6 +24,9 @@ abstract class AbstractHalEntity extends AbstractModel {
     protected $links;
 
     /** @var array */
+    protected $identifiers;
+
+    /** @var array */
     public $custom;
 
     public static function getLinkName(): string {
@@ -34,7 +37,7 @@ abstract class AbstractHalEntity extends AbstractModel {
 
         $this->actionNetwork = $actionNetwork;
         $this->uri = $json['_links']['self']['href'];
-
+        $this->identifiers = self::parseIdentifiers($json['identifiers']);
         $this->custom = $json['custom_fields'] ?? [];
 
         foreach ($json['_links'] as $linkName => $link) {
@@ -55,6 +58,29 @@ abstract class AbstractHalEntity extends AbstractModel {
         /** @noinspection PhpUndefinedMethodInspection */
         return (new HalCollectionRequest($this->actionNetwork, $this->links[$class::getLinkName()]))
             ->getResponse($class);
+    }
+
+    protected static function parseIdentifiers(array $identifiers): array {
+        $result = [];
+        foreach ($identifiers as $identifier) {
+            list($key, $value) = explode(':', $identifier);
+            $result[$key] = $value;
+        }
+        return $result;
+    }
+
+    protected function serializeIdentifiers(): array {
+        $result = [];
+        foreach ($this->identifiers as $name => $identifier) {
+            $result[] = "$name:$identifier";
+        }
+        return $result;
+    }
+
+    protected function serialize(array $data = []): array {
+        return parent::serialize([
+            'identifiers' => $this->serializeIdentifiers(),
+        ]);
     }
 
     /**
