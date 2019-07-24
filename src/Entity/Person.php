@@ -2,7 +2,6 @@
 
 namespace Guym4c\ActionNetwork\Entity;
 
-use DateTime;
 use Exception;
 use Guym4c\ActionNetwork\ActionNetworkApiException;
 use Guym4c\ActionNetwork\Client;
@@ -32,6 +31,9 @@ class Person extends AbstractHalEntity {
     /** @var $postalAddresses[] */
     public $postalAddresses;
 
+    /** @var Link\ToChildren */
+    public $attendances;
+
     /**
      * Person constructor.
      * @param Client $actionNetwork
@@ -41,10 +43,9 @@ class Person extends AbstractHalEntity {
     public function __construct(Client $actionNetwork, array $json) {
         parent::__construct($actionNetwork, $json);
 
-        $this->created = new DateTime($json['created_date']);
-        $this->modified = new DateTime($json['modified_date']);
         $this->populateArrayType(EmailAddress::class, 'emailAddresses', $json);
         $this->populateArrayType(PostalAddress::class, 'postalAddresses', $json);
+        $this->attendances = new Link\ToChildren($this->actionNetwork, $this->links['osdi:attendances'], Attendance::class);
 
         $this->hydrate($json);
     }
@@ -54,14 +55,6 @@ class Person extends AbstractHalEntity {
             'email_addresses' => self::serializeArray($this->emailAddresses),
             'postal_addresses' => self::serializeArray($this->postalAddresses),
         ]);
-    }
-
-    /**
-     * @return HalCollection
-     * @throws ActionNetworkApiException
-     */
-    public function attendances(): HalCollection {
-        return $this->getLinkedCollection(Attendance::class);
     }
 
     /**
