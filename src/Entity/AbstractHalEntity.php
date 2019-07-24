@@ -2,6 +2,8 @@
 
 namespace Guym4c\ActionNetwork\Entity;
 
+use DateTime;
+use Exception;
 use Guym4c\ActionNetwork\ActionNetworkApiException;
 use Guym4c\ActionNetwork\Client;
 use Guym4c\ActionNetwork\HalCollection;
@@ -25,7 +27,13 @@ abstract class AbstractHalEntity extends AbstractModel {
     protected $links;
 
     /** @var array */
-    protected $identifiers;
+    public $identifiers;
+
+    /** @var DateTime */
+    public $created;
+
+    /** @var DateTime */
+    public $modified;
 
     /** @var array */
     public $custom;
@@ -34,11 +42,19 @@ abstract class AbstractHalEntity extends AbstractModel {
         return static::$linkName;
     }
 
+    /**
+     * AbstractHalEntity constructor.
+     * @param Client $actionNetwork
+     * @param array  $json
+     * @throws Exception
+     */
     public function __construct(Client $actionNetwork, array $json) {
 
         $this->actionNetwork = $actionNetwork;
         $this->uri = $json['_links']['self']['href'];
         $this->identifiers = self::parseIdentifiers($json['identifiers']);
+        $this->created = new DateTime($json['created_date']);
+        $this->modified = new DateTime($json['modified_date']);
         $this->custom = $json['custom_fields'] ?? [];
 
         foreach ($json['_links'] as $linkName => $link) {
@@ -81,6 +97,8 @@ abstract class AbstractHalEntity extends AbstractModel {
     protected function serialize(array $data = []): array {
         return parent::serialize([
             'identifiers' => $this->serializeIdentifiers(),
+            'created_date' => $this->created->format(DATE_ATOM),
+            'modified_date' => $this->modified->format(DATE_ATOM),
         ]);
     }
 

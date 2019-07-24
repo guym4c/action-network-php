@@ -17,12 +17,6 @@ class Person extends AbstractHalEntity {
     /** @var array */
     public $identifiers;
 
-    /** @var DateTime */
-    public $created;
-
-    /** @var DateTime */
-    public $modified;
-
     /** @var string */
     public $familyName;
 
@@ -57,8 +51,6 @@ class Person extends AbstractHalEntity {
 
     public function jsonSerialize(): array {
         return $this->serialize([
-            'created_date' => $this->created->format(DATE_ATOM),
-            'modified_date' => $this->modified->format(DATE_ATOM),
             'email_addresses' => self::serializeArray($this->emailAddresses),
             'postal_addresses' => self::serializeArray($this->postalAddresses),
         ]);
