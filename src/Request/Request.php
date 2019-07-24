@@ -37,7 +37,13 @@ class Request {
         $this->http = new GuzzleHttp\Client();
         $this->throttler = new Throttle\LeakyBucket();
 
-        $this->request = new Psr7\Request($method, $uri, ['OSDI-API-Token' => $this->actionNetwork->getToken()]);
+        $headers = ['OSDI-API-Token' => $this->actionNetwork->getToken()];
+
+        if (in_array($method, ['POST', 'PUT', 'PATCH'])) {
+            $headers['Content-Type'] = 'application/json';
+        }
+
+        $this->request = new Psr7\Request($method, $uri, $headers);
     }
 
     /**

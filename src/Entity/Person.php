@@ -72,5 +72,15 @@ class Person extends AbstractHalEntity {
         return $this->getLinkedCollection(Attendance::class);
     }
 
+    /**
+     * Allow PUT requests
+     *
+     * @return object
+     * @throws ActionNetworkApiException
+     */
+    public function persist(): object {
+        return parent::persist();
+    }
+
 
 }

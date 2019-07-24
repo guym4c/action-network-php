@@ -6,6 +6,7 @@ use Guym4c\ActionNetwork\ActionNetworkApiException;
 use Guym4c\ActionNetwork\Client;
 use Guym4c\ActionNetwork\HalCollection;
 use Guym4c\ActionNetwork\Request\HalCollectionRequest;
+use Guym4c\ActionNetwork\Request\HalEntityRequest;
 
 abstract class AbstractHalEntity extends AbstractModel {
 
@@ -81,6 +82,15 @@ abstract class AbstractHalEntity extends AbstractModel {
         return parent::serialize([
             'identifiers' => $this->serializeIdentifiers(),
         ]);
+    }
+
+    /**
+     * @return object
+     * @throws ActionNetworkApiException
+     */
+    protected function persist(): object {
+        return (new HalEntityRequest($this->actionNetwork, $this->uri, 'PUT'))
+            ->getResponse(static::class);
     }
 
     /**
