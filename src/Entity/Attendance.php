@@ -31,7 +31,7 @@ class Attendance extends AbstractHalEntity {
 
         $this->referrer = new Referrer($json['action_network:referrer_data']);
         $this->person = new Link\ToParent($this->actionNetwork, $this->links['osdi:person'], Person::class);
-        $this->event = $json[' action_network:event_id'];
+        $this->event = $json['action_network:event_id'];
         $this->hydrate($json);
     }
 }

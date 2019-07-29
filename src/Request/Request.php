@@ -12,7 +12,7 @@ use Teapot\StatusCode;
 
 class Request {
 
-    const THROTTLER_ID = 'action_network';
+    private const THROTTLER_ID = 'action_network';
 
     /**
      * @var Client

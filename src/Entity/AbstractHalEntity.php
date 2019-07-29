@@ -12,7 +12,7 @@ use Guym4c\ActionNetwork\Request\HalEntityRequest;
 
 abstract class AbstractHalEntity extends AbstractModel {
 
-    const LINK_FILTER_KEYS = ['docs', 'self', 'canvasser:brand_logo', 'curies'];
+    private const LINK_FILTER_KEYS = ['docs', 'self', 'canvasser:brand_logo', 'curies'];
 
     /** @var Client */
     protected $actionNetwork;

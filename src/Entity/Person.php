@@ -7,7 +7,6 @@ use Guym4c\ActionNetwork\ActionNetworkApiException;
 use Guym4c\ActionNetwork\Client;
 use Guym4c\ActionNetwork\Entity\Utils\EmailAddress;
 use Guym4c\ActionNetwork\Entity\Utils\PostalAddress;
-use Guym4c\ActionNetwork\HalCollection;
 
 class Person extends AbstractHalEntity {
 
