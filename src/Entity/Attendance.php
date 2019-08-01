@@ -19,8 +19,7 @@ class Attendance extends AbstractHalEntity {
     /** @var Link\ToParent */
     public $person;
 
-    /** @var string */
-    //TODO
+    /** @var Link\ToParent */
     public $event;
 
     /** @var Referrer */
@@ -30,8 +29,8 @@ class Attendance extends AbstractHalEntity {
         parent::__construct($actionNetwork, $json);
 
         $this->referrer = new Referrer($json['action_network:referrer_data']);
-        $this->person = new Link\ToParent($this->actionNetwork, $this->links['osdi:person'], Person::class);
-        $this->event = $json['action_network:event_id'];
+        $this->person = new Link\ToParent($this->actionNetwork, Person::class, $this->links);
+        $this->event = new Link\ToParent($this->actionNetwork, Event::class, $this->links);
         $this->hydrate($json);
     }
 }

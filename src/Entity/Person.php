@@ -45,7 +45,7 @@ class Person extends AbstractHalEntity {
 
         $this->populateArrayType(EmailAddress::class, 'emailAddresses', $json);
         $this->populateArrayType(AbstractAddress::class, 'postalAddresses', $json);
-        $this->attendances = new Link\ToChildren($this->actionNetwork, $this->links['osdi:attendances'], Attendance::class);
+        $this->attendances = new Link\ToChildren($this->actionNetwork, Attendance::class, $this->links);
 
         $this->hydrate($json);
     }

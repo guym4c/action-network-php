@@ -21,9 +21,15 @@ abstract class AbstractLink {
      * @param string $href
      * @param string $resource
      */
-    public function __construct(Client $actionNetwork, string $href, string $resource) {
+    public function __construct(Client $actionNetwork, string $resource, $links) {
         $this->actionNetwork = $actionNetwork;
-        $this->href = $href;
+
+        if (is_array($links)) {
+            /** @noinspection PhpUndefinedMethodInspection */
+            $this->href = $links[$resource::getLinkName()];
+        } else {
+            $this->href = $links;
+        }
         $this->resource = $resource;
     }
 
