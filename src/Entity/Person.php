@@ -6,6 +6,7 @@ use Exception;
 use Guym4c\ActionNetwork\ActionNetworkApiException;
 use Guym4c\ActionNetwork\Client;
 use Guym4c\ActionNetwork\Entity\Utils\EmailAddress;
+use Guym4c\ActionNetwork\Entity\Utils\AbstractAddress;
 use Guym4c\ActionNetwork\Entity\Utils\PostalAddress;
 
 class Person extends AbstractHalEntity {
@@ -27,7 +28,7 @@ class Person extends AbstractHalEntity {
     /** @var EmailAddress[] */
     public $emailAddresses;
 
-    /** @var $postalAddresses[] */
+    /** @var PostalAddress[] */
     public $postalAddresses;
 
     /** @var Link\ToChildren */
@@ -43,7 +44,7 @@ class Person extends AbstractHalEntity {
         parent::__construct($actionNetwork, $json);
 
         $this->populateArrayType(EmailAddress::class, 'emailAddresses', $json);
-        $this->populateArrayType(PostalAddress::class, 'postalAddresses', $json);
+        $this->populateArrayType(AbstractAddress::class, 'postalAddresses', $json);
         $this->attendances = new Link\ToChildren($this->actionNetwork, $this->links['osdi:attendances'], Attendance::class);
 
         $this->hydrate($json);
